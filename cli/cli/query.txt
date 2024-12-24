@@ -1,0 +1,1 @@
+search collection --collection_id 1 --query Who is Sherlock Holmes?

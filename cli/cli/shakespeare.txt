@@ -1,0 +1,2 @@
+create collection --collection_id 2 --title Shakespeare
+download document --collection_id 2 --document_id pg100 --title Complete Works of William Shakespeare --source_url https://www.gutenberg.org/cache/epub/100/pg100.txt --doc_type TXT

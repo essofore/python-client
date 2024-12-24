@@ -1,0 +1,10 @@
+create collection --collection_id 1 --title Sherlock Holmes
+upload document --collection_id 1 --document_id pg3289 --title The Valley of Fear --file ./data/sherlock-holmes/pg3289.txt --doc_type txt
+upload document --collection_id 1 --document_id pg1661 --title The Adventures of Sherlock Holmes --file ./data/sherlock-holmes/pg1661.txt --doc_type txt
+upload document --collection_id 1 --document_id pg108 --title The Return of Sherlock Holmes --file ./data/sherlock-holmes/pg108.txt --doc_type txt
+upload document --collection_id 1 --document_id pg2097 --title The Sign of the Four --file ./data/sherlock-holmes/pg2097.txt --doc_type txt
+upload document --collection_id 1 --document_id pg2350 --title His Last Bow --file ./data/sherlock-holmes/pg2350.txt --doc_type txt
+upload document --collection_id 1 --document_id pg2852 --title The Hound of the Baskervilles --file ./data/sherlock-holmes/pg2852.txt --doc_type txt
+upload document --collection_id 1 --document_id pg834 --title The Memoirs of Sherlock Holmes --file ./data/sherlock-holmes/pg834.txt --doc_type txt
+upload document --collection_id 1 --document_id pg69700 --title The Case Book of Sherlock Holmes --file ./data/sherlock-holmes/pg69700.txt --doc_type txt
+upload document --collection_id 1 --document_id pg244 --title A Study in Scarlet --file ./data/sherlock-holmes/pg244.txt --doc_type txt

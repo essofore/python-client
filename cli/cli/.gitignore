@@ -1,0 +1,6 @@
+data/
+.DS_Store
+*.swp
+*.cmd
+__pycache__
+input.txt
