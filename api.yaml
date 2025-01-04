@@ -1,0 +1,727 @@
+openapi: 3.0.1
+info:
+  title: Essofore OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /documents/upload:
+    post:
+      tags:
+        - documents
+      operationId: uploadDocument
+      parameters:
+        - name: collectionId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: documentId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: title
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: docType
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/DocumentType'
+        - name: sourceUrl
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: metadata
+          in: query
+          required: false
+          # it does not work though. see: https://github.com/openapi-generators/openapi-python-client/issues/1064
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentInfo'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+  /documents/download:
+    post:
+      tags:
+        - documents
+      operationId: downloadDocument
+      parameters:
+        - name: collectionId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: documentId
+          in: query
+          required: true
+          schema:
+            type: string        
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: title
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: docType
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/DocumentType'
+        - name: sourceUrl
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: metadata
+          in: query
+          required: false
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            additionalProperties:
+              type: string      
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentInfo'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+  /collections:
+    get:
+      tags:
+        - collections
+      operationId: getCatalogInfo
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:                
+                $ref: '#/components/schemas/CatalogInfo'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+    post:
+      tags:
+        - collections
+      operationId: createCollection
+      parameters:
+        - name: collectionId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: title
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: metadata
+          in: query
+          required: false
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            additionalProperties:
+              type: string      
+      responses:
+        '200':
+          description: OK          
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+  /collections/{collectionId}:
+    get:
+      tags:
+        - collections
+      operationId: getCollectionInfo
+      parameters:
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionInfo'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+    put:      
+      tags:
+        - collections
+      operationId: updateCollection
+      parameters:
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: metadata
+          in: query
+          required: false
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+        - name: merge
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/MetadataMode'        
+      responses:
+        '200':
+          description: OK          
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+    delete:
+      tags:
+        - collections
+      operationId: deleteCollection
+      parameters:
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+  /collections/rename:    
+    post:
+      tags:
+        - collections
+      operationId: renameCollection
+      parameters:
+        - name: oldId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: newId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern      
+      responses:
+        '200':
+          description: OK          
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+  /collections/query:
+    get:
+      tags:
+        - collections
+      operationId: search
+      parameters:
+        - name: collectionId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: k
+          in: query
+          required: false
+          schema:
+            maximum: 20
+            minimum: 1
+            type: integer
+            format: int32
+            default: 5
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'  
+  /documents/{collectionId}/{documentId}:
+    get:
+      tags:
+        - documents
+      operationId: getDocumentInfo
+      parameters:
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentInfo'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+    put:
+      tags:
+        - documents
+      operationId: updateDocument
+      parameters:
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: title
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: docType
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/DocumentType'
+        - name: sourceUrl
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: metadata
+          in: query
+          required: false
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            additionalProperties:
+              type: string
+        - name: merge
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/MetadataMode'
+      responses:
+        '200':
+          description: OK          
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+    delete:
+      tags:
+        - documents
+      operationId: deleteDocument
+      parameters:
+        - name: collectionId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+      responses:
+        '200':
+          description: OK
+        # The HyperText Transfer Protocol (HTTP) 400 Bad Request response status code indicates that the server cannot or will not process the request
+        # due to something that is perceived to be a client error (for example, malformed request syntax, invalid request message framing, or deceptive request routing).
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'  
+        # The HyperText Transfer Protocol (HTTP) 422 Unprocessable Content response status code indicates that the server understands
+        # the content type of the request entity, and the syntax of the request entity is correct, but it was unable to process the contained instructions.
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+  /documents/rename:    
+    post:
+      tags:
+        - documents
+      operationId: renameDocument
+      parameters:
+        - name: collectionId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: oldId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern
+        - name: newId
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z0-9_-]{1,20}$' # https://swagger.io/docs/specification/data-models/data-types/#pattern      
+      responses:
+        '200':
+          description: OK          
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnprocessableContent'
+  
+components:
+  schemas:
+    DocumentType:
+      type: string
+      # enums are case-sensitive. see: https://stackoverflow.com/questions/60772786/case-insensitive-string-parameter-in-schema-of-openapi
+      # and this bug: https://github.com/OpenAPITools/openapi-generator/issues/18426
+      enum: [TXT, HTML, PDF, DOC, XLS, PPT]
+    MetadataMode:
+      # defines how metadata will be merged with existing during update operation
+      # do not change to lowercase as it will create a bug. this has to do with how Java parses enums. see:
+      # https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html#valueOf-java.lang.Class-java.lang.String-
+      # The name must match exactly an identifier used to declare an enum constant in this type
+      type: string
+      enum: [UPDATE, REPLACE]
+    BadRequest:
+      type: object
+      # we do not make anything required because when Spring throws a bad request before it even hits our code (it can happen), that request has following format:
+      # {'timestamp': '2024-04-17T21:30:57.639+00:00', 'status': 400, 'error': 'Bad Request', 'path': '/collections/sherlock-holmes4/pg3070/upload'}
+      # and this is different from our schema
+      properties:
+        timestamp:
+          type: string
+        status:
+          type: string
+        path:
+          type: string
+        message:
+          type: string
+        error:
+          type: string
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Violation'
+    UnprocessableContent:
+      type: object      
+      properties:
+        timestamp:
+          type: string
+        status:
+          type: string
+        path:
+          type: string
+        message:
+          type: string
+        error:
+          type: string      
+    Violation:
+      type: object
+      required:
+        - fieldName
+        - message
+      properties:
+        fieldName:
+          type: string
+        message:
+          type: string
+    DocumentInfo:
+      type: object
+      required:
+        - collectionId
+        - documentId
+        - title
+        - sampleText
+        - embeddingsCount
+        - size
+      properties:
+        collectionId:
+          type: string
+        documentId:
+          type: string
+        title:
+          type: string
+        sampleText:
+          type: string
+        embeddingsCount:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int64
+    ImportArgs:
+      required:
+        - title
+        - sourceUrl
+        - docType
+      type: object
+      properties:
+        title:
+          type: string
+        sourceUrl:
+          type: string
+        docType:          
+          $ref: '#/components/schemas/DocumentType'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string            
+    CollectionInfo:
+      type: object
+      required:
+        - id
+        - size
+        - title
+        - documents        
+      properties:
+        id:
+          type: string        
+        size:
+          type: integer
+          format: int64
+        title:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentInfo'    
+    SearchResult:
+      type: object
+      required:
+        - documentId
+        - title
+        - text
+        - distance
+        - order
+      properties:
+        documentId:
+          type: string
+        title:
+          type: string
+        text:
+          type: string
+        distance:
+          type: number
+          format: float
+        order:
+          type: integer
+          format: int32
+    CatalogInfo:
+      type: object      
+      required:
+        - collections
+      properties:
+        collections:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogEntry'          
+    CatalogEntry:
+      type: object
+      required:
+        - collectionId
+        - collectionTitle
+        - documentCount
+        - embeddingsCount
+        - size
+      properties:
+        collectionId:
+          type: string
+        collectionTitle:
+          type: string
+        documentCount:
+          type: integer
+          format: int32
+        embeddingsCount:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int64

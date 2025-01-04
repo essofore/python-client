@@ -238,6 +238,10 @@ from one collection to another. You have to do that explicitly via a combination
 Study the source code of commands under `cli/cli/commands` to understand how the CLI uses the python client library `essofore-client` to communicate with the database.
 You can similarly write clients in any programming language you like and are not limited to `python` since the core communication happens to the server over a REST API.
 
+## Other Languages
+
+You are not limited to using Python to program against the server. You can use OpenAPI generators like [this](https://github.com/OpenAPITools/openapi-generator) one together with the provided [api.yaml](api.yaml) file in this repo to generate a client in another language.
+
 ## Help and Support
 
 - [Google Groups](https://groups.google.com/g/essofore)
